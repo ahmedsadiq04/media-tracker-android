@@ -14,46 +14,33 @@
 ## Code Review
 
 
-**Reviewed:** *(pod mate's name)*
-**Link to my review:**
+**Reviewed:** *Ilyas*
+**Link to my review:** https://github.com/Ilyas9805/media-tracker-android/pull/1
 
 ### What I Looked At
-
-<!-- Walk through the code you reviewed. What was the PR trying to do? Which files or
-     functions did you focus on? -->
+The singular line change that changed `MaterialTheme` to `MediaTrackerTheme()`
 
 ### What I Noticed
-
-<!-- Be specific. Did you spot a potential bug? A pattern that could cause problems? Something
-     done well that you want to call out? "I looked at the ViewModel and everything seemed fine"
-     is not specific enough. Name the thing you noticed and explain why it matters. -->
+Nothing special, this is the first week so its quite hard to kinda say much mor about this.
 
 ### Comments I Left
-
-<!-- Briefly summarize the comments you left on the PR. If you left a positive comment,
-     say what it was. If you left a suggestion, say what you suggested and why. -->
+LGTM
 
 ---
 
 ## One Thing I Understood More Deeply
-
-<!-- Be specific. Don't write "I learned about ViewModels." Write what specifically clicked —
-     what was confusing before, what made it make sense, and how you'd explain it to someone else.
-     There are no wrong answers here. -->
+Theres not much I learned about this week, I think mainly starting to use Android Studio was cool although Its quite heavy as an editor.
 
 ---
 
 ## One Thing I'm Still Confused About
-
-<!-- Be honest. This is the most useful part of the reflection for me — it tells me where to
-     spend more time in class. You will not lose points for being confused. -->
+Since its just the first week, theres not really anthing I was confused about,
+perhaps in the future weeks I might questions
 
 ---
 
 ## Anything Else *(optional)*
-
-<!-- Did you help a pod mate work through something? Did you discover something cool or frustrating?
-     Did something from a previous week finally click? This is a good place to put it. -->
+I helped out my group memebers with git since there was a lot of issues, especialyl with Android Studio
 
 ---
 
