@@ -1,8 +1,8 @@
-# Week {{N}} Reflection
+# Week 1 Reflection
 
 **Name:** Sadiq Ahmed
 
-**Date:**
+**Date:** 05/21/2026
 
 ---
 
