@@ -1,35 +1,58 @@
 package edu.metrostate.ics342.mediatracker.ui.auth
 
 import android.inputmethodservice.Keyboard
+import android.widget.ImageView
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.*
-import androidx.compose.ui.draw.alpha
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun RegisterScreen(
     onRegisterSuccess: () -> Unit,
-    onNavigateToLogin: () -> Unit
+    onNavigateToLogin: () -> Unit,
+    viewModel: AuthViewModel = viewModel()
 ) {
-    var display = rememberTextFieldState("");
-    var username = rememberTextFieldState("");
-    var email = rememberTextFieldState("");
+    val display         by viewModel.display.collectAsState()
+    val username        by viewModel.username.collectAsState()
+    val email           by viewModel.email.collectAsState()
+    val password        by viewModel.password.collectAsState()
+    val passConf        by viewModel.passwordConfirm.collectAsState()
 
-    //Maybe use Hash?
-    var password = rememberTextFieldState("");
-    var passConf = rememberTextFieldState("");
+    val registerState      by viewModel.registerState.collectAsState()
+    val focusManager = LocalFocusManager.current
+
+    // Navigate on success
+    LaunchedEffect(registerState) {
+        if (registerState is AuthViewModel.AuthUiState.Success) {
+            viewModel.resetRegisterState()
+            onRegisterSuccess()
+        }
+    }
+
+    val isLoading = registerState is AuthViewModel.AuthUiState.Loading
+    val errorMsg  = (registerState as? AuthViewModel.AuthUiState.Error)?.msgResId?.let { stringResource(it) }
 
     Column(
         modifier = Modifier
@@ -40,64 +63,125 @@ fun RegisterScreen(
     ) {
         //TODO: Missing Ttile Image
 
-        Text(
-            text = "Create Account",
-            style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.primary //TODO: must be text primary (black)
-        )
-        Text(
-            text = "Join the community",
-            style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.secondary //TODO: must be text secondary (grey)
-        )
-        Spacer(Modifier.height(24.dp))
+        Text(stringResource(edu.metrostate.ics342.mediatracker.R.string.register_title), style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.primary)
+
+        Spacer(Modifier.height(8.dp))
+
+        Text(stringResource(edu.metrostate.ics342.mediatracker.R.string.register_sub_title),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center)
+
+        Spacer(Modifier.height(40.dp))
 
         //Actual Login Items - Input Fields
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            state = display,
-            label = { Text("Display Name") }
+            value         = display,
+            onValueChange = viewModel::onDisplayChange,
+            label         = { Text(stringResource(edu.metrostate.ics342.mediatracker.R.string.displayname_label)) },
+            singleLine    = true,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction    = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = { focusManager.moveFocus(FocusDirection.Down) }
+            ),
+            modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(24.dp))
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            state = username,
-            label = { Text("Username") }
+            value         = username,
+            onValueChange = viewModel::onUsernameChange,
+            label         = { Text(stringResource(edu.metrostate.ics342.mediatracker.R.string.username_label)) },
+            singleLine    = true,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction    = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = { focusManager.moveFocus(FocusDirection.Down) }
+            ),
+            modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(24.dp))
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            state = email,
-            label = { Text("Email") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+            value         = email,
+            onValueChange = viewModel::onEmailChange,
+            label         = { Text(stringResource(edu.metrostate.ics342.mediatracker.R.string.email_label)) },
+            singleLine    = true,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email,
+                imeAction    = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = { focusManager.moveFocus(FocusDirection.Down) }
+            ),
+            modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(24.dp))
 
         //TODO: Password Should Be Hidden
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            state = password,
-            label = { Text("Password") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+            value         = password,
+            onValueChange = viewModel::onPasswordChange,
+            label         = { Text(stringResource(edu.metrostate.ics342.mediatracker.R.string.password_label)) },
+            singleLine    = true,
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction    = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = { focusManager.moveFocus(FocusDirection.Down) }
+            ),
+            modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(24.dp))
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            state = passConf,
-            label = { Text("Confirm Password") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+            value         = passConf,
+            onValueChange = viewModel::onPasswordConfirmChange,
+            label         = { Text(stringResource(edu.metrostate.ics342.mediatracker.R.string.confirm_password_label)) },
+            singleLine    = true,
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction    = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = { focusManager.moveFocus(FocusDirection.Down) }
+            ),
+            modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(Modifier.height(16.dp))
+        if (errorMsg != null) {
+            Spacer(Modifier.height(8.dp))
+            Text(errorMsg, color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall)
+        }
+
+        Spacer(Modifier.height(24.dp))
         Button(
-            onClick = onRegisterSuccess, //TODO: Should have func to actually sign-up instead of just saying it's OK - validation
+            onClick  = { focusManager.clearFocus(); viewModel.onRegisterClick() },
+            enabled  = !isLoading,
             modifier = Modifier.fillMaxWidth().height(48.dp)
         ) {
-            Text("Sign Up")
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                    strokeWidth = 2.dp,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            } else {
+                Text(stringResource(edu.metrostate.ics342.mediatracker.R.string.sign_up_button))
+            }
         }
-        Spacer(Modifier.height(8.dp))
+
+        Spacer(Modifier.height(16.dp))
+
         TextButton(onClick = onNavigateToLogin) {
-            Text("Already have an account? Log In") //TODO: The button should only be the 'Sign In' Part, not whole part
+            Text(stringResource(edu.metrostate.ics342.mediatracker.R.string.login_prompt))
         }
     }
 }

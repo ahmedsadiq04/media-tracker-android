@@ -3,10 +3,18 @@
     <string name="app_tagline">Track what you read, watch, and discover.</string>
 
     <!-- Auth -->
+    <string name="displayname_label">Display Name</string>
+    <string name="username_label">Username</string>
     <string name="email_label">Email</string>
     <string name="password_label">Password</string>
+    <string name="confirm_password_label">Confirm Password</string>
     <string name="sign_in_button">Sign In</string>
+    <string name="sign_up_button">Sign Up</string>
+
+    <string name="register_title">Create Account</string>
+    <string name="register_sub_title">Join the community</string>
     <string name="register_prompt">Don\'t have an account? Register</string>
+    <string name="login_prompt">Already have an account? Log In</string>
     <string name="register_not_implemented">Create Account is not implemented yet.</string>
 
     <!-- Navigation -->
@@ -82,7 +90,14 @@
     <string name="feed_media_something">something</string>
 
     <!-- Errors -->
+    <string name="error_unknown">An unknown error has occurred, please refresh your application.</string>
     <string name="error_empty_credentials">Please enter your email and password.</string>
+    <string name="error_empty_display">Please enter your Display Name.</string>
+    <string name="error_empty_user">Please enter your Username.</string>
+    <string name="error_empty_email">Please enter a valid email address.</string>
+    <string name="error_empty_pass">Please enter a password.</string>
+    <string name="error_pass_not_match">Passwords do not match.</string>
+    <string name="error_bad_password">Passwords should have 8 characters, and at least 1 letter and 1 number.</string>
 
     <!-- Media -->
     <string name="media_unknown_author">Unknown Author</string>
