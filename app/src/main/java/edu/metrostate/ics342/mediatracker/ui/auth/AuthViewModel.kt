@@ -9,10 +9,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import edu.metrostate.ics342.mediatracker.data.UserRepository
 
-//TODO: This should be split into two separate files,
-class AuthViewModel(
-    private val userRepository: UserRepository,
-) : ViewModel() {
+class AuthViewModel() : ViewModel() {
+
+    //private val userRepository: UserRepository
 
     //returns a boolean if this is a valid email
     private fun isValidEmail(value: String): Boolean {
@@ -103,13 +102,16 @@ class AuthViewModel(
 
             delay(1000)
 
+            /*
             userRepository.createAccount(
                 _display.value,
                 _username.value,
                 _email.value,
                 _password.value,
             )
-            _registerState.value = AuthUiState.Success
+            */
+
+            _registerState.value = AuthUiState.Success //Cancel the registration
         }
     }
 
