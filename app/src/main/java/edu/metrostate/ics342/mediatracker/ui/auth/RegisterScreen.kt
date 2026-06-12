@@ -2,6 +2,8 @@ package edu.metrostate.ics342.mediatracker.ui.auth
 
 import android.inputmethodservice.Keyboard
 import android.widget.ImageView
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -11,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -20,13 +23,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import edu.metrostate.ics342.mediatracker.theme.OnPrimaryContainer
+import edu.metrostate.ics342.mediatracker.theme.PrimaryContainer
 
 @Composable
 fun RegisterScreen(
@@ -61,7 +68,15 @@ fun RegisterScreen(
         Arrangement.Center,
        Alignment.CenterHorizontally
     ) {
-        //TODO: Missing Ttile Image
+        Image(
+            painterResource(edu.metrostate.ics342.mediatracker.R.drawable.smart_display),
+            contentDescription = "Application Icon",
+            modifier = Modifier
+                .size(width = 64.dp, height = 64.dp)
+                .background(PrimaryContainer, RoundedCornerShape(12.dp))
+                .padding(12.dp),
+            colorFilter = ColorFilter.tint(OnPrimaryContainer)
+        )
 
         Text(stringResource(edu.metrostate.ics342.mediatracker.R.string.register_title), style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.primary)
