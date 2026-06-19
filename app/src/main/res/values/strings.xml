@@ -98,6 +98,8 @@
     <string name="error_empty_pass">Please enter a password.</string>
     <string name="error_pass_not_match">Passwords do not match.</string>
     <string name="error_bad_password">Passwords should have 8 characters, and at least 1 letter and 1 number.</string>
+    <string name="error_api_auth">Failed to connect to API, 409 Unauthorized.</string>
+    <string name="error_api_generic">Failed to connect to API, please check your connection.</string>
 
     <!-- Media -->
     <string name="media_unknown_author">Unknown Author</string>

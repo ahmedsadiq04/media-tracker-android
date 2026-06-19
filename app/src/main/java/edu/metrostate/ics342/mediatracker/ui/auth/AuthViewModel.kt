@@ -2,6 +2,7 @@ package edu.metrostate.ics342.mediatracker.ui.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import edu.metrostate.ics342.mediatracker.data.APIResult
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -9,10 +10,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import edu.metrostate.ics342.mediatracker.data.UserRepository
 
-class AuthViewModel() : ViewModel() {
-
-    //private val userRepository: UserRepository
-
+class AuthViewModel(
+    private val userRepository: UserRepository = UserRepository(),
+) : ViewModel() {
     //returns a boolean if this is a valid email
     private fun isValidEmail(value: String): Boolean {
         val emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$".toRegex()
@@ -100,18 +100,21 @@ class AuthViewModel() : ViewModel() {
                 return@launch
             }
 
-            delay(1000)
-
-            /*
-            userRepository.createAccount(
+            var res = userRepository.createAccount(
                 _display.value,
                 _username.value,
                 _email.value,
                 _password.value,
             )
-            */
 
-            _registerState.value = AuthUiState.Success //Cancel the registration
+            when(res) {
+                is APIResult.Success -> {
+                    _registerState.value = AuthUiState.Success
+                }
+                is APIResult.Error -> {
+                    _registerState.value = AuthUiState.Error(res.msgResId);
+                }
+            }
         }
     }
 
