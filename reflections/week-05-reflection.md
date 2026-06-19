@@ -11,7 +11,7 @@
 <!-- Paste a link to your commits for this week. The easiest way: go to your repo on GitHub,
      click "commits", and copy the URL after filtering by your name or branch. -->
 
-**Link:** [Week 5 Pull-Request](ADD HERE)
+**Link:** [Week 5 Pull-Request](https://github.com/ahmedsadiq04/media-tracker-android/pull/7)
 
 ---
 
@@ -21,17 +21,26 @@
      Part 1 is the link — I will verify the review exists on GitHub.
      Part 2 is your written assessment — what you actually looked at and what you found. -->
 
-**Reviewed:** XYZ
-**Link to my review:** XYZ URL
+**Reviewed:** Nicolas
+**Link to my review:** https://github.com/NChyrklund/media-tracker-android/pull/6
 
 ### What I Looked At
-ABC
+I looked at all the files while doing the review, but here are the specific files that I've noticed something upon:
+* ApiConstants.kt
+* UserRepository.kt
+* SessionRepository.kt
+* UserApiService.kt
+* strings.xml
 
 ### What I Noticed
-ABC
+I took a look at the mentioned files above and left some comments about them. Mainly noticed that Nicolas had a bunch of functionality that I have not added yet, mainly the session stuff as I had not gotten around to completing it yet. Another thing I noticed and marked was the API service in when the user creates an account, if there is an error such as 409 if theres a duplicate and the user cannot make another account on the same email or username, he added a string in the strings.xml for that specific error, although I'm not sure if the API has any dupe checking. I also made note the compairson from my Repo which has a the UserRepository almost identical to the default one when we forked compared to his which is a lot closer to the branch you currently have on GitHub.
 
 ### Comments I Left
-ABC
+Noticed the ClientID and ClientSecret at the top of /ApiConstants.kt which is a good idea for having all your constants in a single clean spot, the issue in my mind is that it may lead to redundancy where another might have to look at ApiConstants into BuildConfig which then leads to build.grade, a ReadMe might help wiht this but its something that may lead to this.
+
+I also noticed that you split /UserRepository.kt, removing the createAccount and login functions from inside there to another class, not something to be worried or changed but differs from my program.
+
+I like the email or username already taken reponse, although I'm not sure if the API will return that to us, something to keep an eye out for.
 
 ---
 
@@ -50,7 +59,7 @@ every function return an error like this `data, err := CreateAccount(userData)`.
 ---
 
 ## Anything Else *(optional)*
-One thing I notied in your API is that 'isFollowing' seems to be expected to return but when I actually used the API is was not there and caused my JSON serializer to crash as it expected it, Normalally, in a language like Go I could say `omitempty` if its not there, but I'm not sure if theres an equivalent in Kotlin - Just wanted to let you know just incase this is not intended.
+One thing I notied in your API is that 'isFollowing' seems to be expected to return but when I actually used the API is was not there and caused my JSON serializer to crash as it expected it, Normalally, in a language like Go I could say `omitempty` if its not there which would then just drop it instead of searching for it, but I'm not sure if theres an equivalent in Kotlin - Just wanted to let you know just incase this is not intended.
 
 ---
 
