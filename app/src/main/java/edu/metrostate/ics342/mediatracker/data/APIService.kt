@@ -2,6 +2,7 @@ package edu.metrostate.ics342.mediatracker.data
 
 import edu.metrostate.ics342.mediatracker.data.model.CreateUserRequest
 import edu.metrostate.ics342.mediatracker.data.model.CreateUserResponse
+import edu.metrostate.ics342.mediatracker.data.model.TokenRefreshResponse
 import edu.metrostate.ics342.mediatracker.data.model.TokenRequest
 import retrofit2.Response
 import retrofit2.http.Body
@@ -17,8 +18,5 @@ interface ApiService {
     suspend fun createUser(@Body request: CreateUserRequest): Response<Unit>
 
     @POST("tokens")
-    suspend fun login(@Body request: TokenRequest): TokenResponse
+    suspend fun login(@Body request: TokenRequest): Response<TokenRefreshResponse>
 }
-
-//TODO: this should be expanded upon and should do something
-annotation class TokenResponse

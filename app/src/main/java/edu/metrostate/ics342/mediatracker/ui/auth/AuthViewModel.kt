@@ -56,6 +56,20 @@ class AuthViewModel(
             } else {
                 _loginState.value = AuthUiState.Error(edu.metrostate.ics342.mediatracker.R.string.error_empty_credentials)
             }
+
+            var res = userRepository.login(
+                _email.value,
+                _password.value,
+            )
+
+            when(res) {
+                is APIResult.Success -> {
+                    _loginState.value = AuthUiState.Success
+                }
+                is APIResult.Error -> {
+                    _loginState.value = AuthUiState.Error(res.msgResId);
+                }
+            }
         }
     }
 

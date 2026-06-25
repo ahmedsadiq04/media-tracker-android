@@ -99,7 +99,9 @@
     <string name="error_pass_not_match">Passwords do not match.</string>
     <string name="error_bad_password">Passwords should have 8 characters, and at least 1 letter and 1 number.</string>
     <string name="error_api_auth">Failed to connect to API, 409 Unauthorized.</string>
+    <string name="error_api_bad_account">Invalid Username of Password</string>
     <string name="error_api_generic">Failed to connect to API, please check your connection.</string>
+    <string name="error_api_invalid_data">Failed to get valid data from the API.</string>
 
     <!-- Media -->
     <string name="media_unknown_author">Unknown Author</string>
