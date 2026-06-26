@@ -29,6 +29,10 @@ val SurfaceVariant  = Color(0xFFE8E8F0)
 val OnSurfaceVariant= Color(0xFF44475A)
 val Outline         = Color(0xFF9CA3AF)
 
+// Movie type accent — rose/pink (no pink in the M3 palette above, so defined separately)
+val MovieContainer   = Color(0xFFFFE4EE)
+val OnMovieContainer = Color(0xFF9D174D)
+
 // Dark theme
 val DarkBackground       = Color(0xFF0F0F1A)
 val DarkSurface          = Color(0xFF1A1A2E)
@@ -37,6 +41,3 @@ val DarkPrimary          = Color(0xFF818CF8)
 val DarkOnPrimary        = Color(0xFF1E1B4B)
 val DarkPrimaryContainer = Color(0xFF2D2B6E)
 val DarkOnPrimaryContainer = Color(0xFFE0E7FF)
-
-val MovieContainer   = Color(0xFFFFE4EE)
-val OnMovieContainer = Color(0xFF9D174D)

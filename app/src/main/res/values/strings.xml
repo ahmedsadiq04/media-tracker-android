@@ -3,19 +3,17 @@
     <string name="app_tagline">Track what you read, watch, and discover.</string>
 
     <!-- Auth -->
-    <string name="displayname_label">Display Name</string>
-    <string name="username_label">Username</string>
     <string name="email_label">Email</string>
     <string name="password_label">Password</string>
+    <string name="display_name_label">Display Name</string>
+    <string name="username_label">Username</string>
     <string name="confirm_password_label">Confirm Password</string>
     <string name="sign_in_button">Sign In</string>
     <string name="sign_up_button">Sign Up</string>
-
-    <string name="register_title">Create Account</string>
-    <string name="register_sub_title">Join the community</string>
     <string name="register_prompt">Don\'t have an account? Register</string>
     <string name="login_prompt">Already have an account? Log In</string>
-    <string name="register_not_implemented">Create Account is not implemented yet.</string>
+    <string name="register_title">Create Account</string>
+    <string name="register_tagline">Join the community</string>
 
     <!-- Navigation -->
     <string name="nav_feed">Feed</string>
@@ -54,12 +52,6 @@
     <string name="action_follow">Follow</string>
     <string name="action_following">Following</string>
 
-    <!-- Search -->
-    <string name="search_title">Search</string>
-    <string name="search_hint">Search books, movies, shows…</string>
-    <string name="search_popular_this_week">Popular This Week</string>
-    <string name="search_results_count">%1$d results</string>
-
     <!-- Connections -->
     <string name="connections_title">Connections</string>
     <string name="connections_followers_empty">No one follows you yet.</string>
@@ -76,6 +68,11 @@
     <string name="settings_email_label">Email</string>
     <string name="settings_change_password">Change password</string>
     <string name="settings_dark_mode">Dark mode</string>
+
+    <!-- Search -->
+    <string name="search_hint">Search books, movies, shows…</string>
+    <string name="search_popular_this_week">Popular This Week</string>
+    <string name="search_results_count">%1$d results</string>
 
     <!-- Stubs -->
     <string name="search_not_implemented">Search is not implemented yet.</string>
@@ -96,18 +93,14 @@
     <string name="feed_media_something">something</string>
 
     <!-- Errors -->
-    <string name="error_unknown">An unknown error has occurred, please refresh your application.</string>
     <string name="error_empty_credentials">Please enter your email and password.</string>
-    <string name="error_empty_display">Please enter your Display Name.</string>
-    <string name="error_empty_user">Please enter your Username.</string>
-    <string name="error_empty_email">Please enter a valid email address.</string>
-    <string name="error_empty_pass">Please enter a password.</string>
-    <string name="error_pass_not_match">Passwords do not match.</string>
-    <string name="error_bad_password">Passwords should have 8 characters, and at least 1 letter and 1 number.</string>
-    <string name="error_api_auth">Failed to connect to API, 409 Unauthorized.</string>
-    <string name="error_api_bad_account">Invalid Username of Password</string>
-    <string name="error_api_generic">Failed to connect to API, please check your connection.</string>
-    <string name="error_api_invalid_data">Failed to get valid data from the API.</string>
+    <string name="error_empty_fields">Please fill in all fields.</string>
+    <string name="error_passwords_mismatch">Passwords do not match.</string>
+    <string name="error_email_or_username_taken">That email or username is already taken.</string>
+    <string name="error_invalid_credentials">Invalid email or password.</string>
+    <string name="error_network">Network error. Check your connection and try again.</string>
+    <string name="error_generic">Something went wrong. Please try again.</string>
+    <string name="register_success">Account created! Please sign in.</string>
 
     <!-- Media -->
     <string name="media_unknown_author">Unknown Author</string>
