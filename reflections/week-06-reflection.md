@@ -11,7 +11,7 @@
 <!-- Paste a link to your commits for this week. The easiest way: go to your repo on GitHub,
      click "commits", and copy the URL after filtering by your name or branch. -->
 
-**Link:** [Week 5 Pull-Request](https://github.com/ahmedsadiq04/media-tracker-android/pull/8)
+**Link:** [Week 6 Pull-Request](https://github.com/ahmedsadiq04/media-tracker-android/pull/8)
 
 ---
 
@@ -21,45 +21,37 @@
      Part 1 is the link — I will verify the review exists on GitHub.
      Part 2 is your written assessment — what you actually looked at and what you found. -->
 
-**Reviewed:** Nicolas
-**Link to my review:** https://github.com/NChyrklund/media-tracker-android/pull/6
+**Reviewed:** Ilyas
+**Link to my review:** https://github.com/Ilyas9805/media-tracker-android/pull/6
 
 ### What I Looked At
-I looked at all the files while doing the review, but here are the specific files that I've noticed something upon:
-* ApiConstants.kt
-* UserRepository.kt
-* SessionRepository.kt
-* UserApiService.kt
-* strings.xml
+I skimmed most of the files but opted to skip most as its just seems to be cloned from your branch, what I did look at was the Search UI, the main file, as well as the networking where the HTTP request was and I made sure he had the @Serializable since thats something I forgot and was breaking my code for a while.
 
 ### What I Noticed
-I took a look at the mentioned files above and left some comments about them. Mainly noticed that Nicolas had a bunch of functionality that I have not added yet, mainly the session stuff as I had not gotten around to completing it yet. Another thing I noticed and marked was the API service in when the user creates an account, if there is an error such as 409 if theres a duplicate and the user cannot make another account on the same email or username, he added a string in the strings.xml for that specific error, although I'm not sure if the API has any dupe checking. I also made note the compairson from my Repo which has a the UserRepository almost identical to the default one when we forked compared to his which is a lot closer to the branch you currently have on GitHub.
+I noticed that Ilyas might've had the same issue I did where we both had to copy large amounts of your repo into our repo as we either fell behind and/or modified too much and did not follow your programming structure. I had to do this due to the ladder, for example my AuthViewModel was a single file, while your was split into Login/Register. Looking into the files associated with the Search Functionality, it looked very simular to what I had implemented so nothing eye-catching there.
 
 ### Comments I Left
-Noticed the ClientID and ClientSecret at the top of /ApiConstants.kt which is a good idea for having all your constants in a single clean spot, the issue in my mind is that it may lead to redundancy where another might have to look at ApiConstants into BuildConfig which then leads to build.grade, a ReadMe might help wiht this but its something that may lead to this.
-
-I also noticed that you split /UserRepository.kt, removing the createAccount and login functions from inside there to another class, not something to be worried or changed but differs from my program.
-
-I like the email or username already taken reponse, although I'm not sure if the API will return that to us, something to keep an eye out for.
+Seems to be in the same position that I was in in which you migt've needed to update a lot of oyur files since you have a ton of files being added, could be another reason tho.
+Another thing I've noticed is that  your `SearchViewModel.kt` is no longer apart of this repo, might've been deleted on accident, Overall great work, and looking in-detail to the files that we've changed, the Search screen, as well as your MediaAPI Service and relevent files required for searching, it looks great and very simular to my code - which means it most likely works.
 
 ---
 
 ## One Thing I Understood More Deeply
-This week I tried to learn how Kotlin did the API requests and figure out a bit about how Kotlin handles it.
-I'm not used the way Kotlin tries to do everything for you with the @Body for the JSON body as well as @POST, @GET, and @PATCH for the other
-HTTP methods. I'm used to Go and JS and how they handle it, especially with Go building the client and then having it be sent with the JSON serializer using types / structs which is quite simular to Kotlin.
+The API aspect of this is the easy part for me as I have expirence a ton in Server-Side Architecture, so Bearer tokens and API
+tokens were super easy for me to pick up, and looking more into Kotlin and how they serialize json is pretty nice, once you get the hang of things, and just like Java, Kotlin has the same issue where its just hella imports and abstraction, which I personally do not like. Overall, I think this week was a bit faster than the other weeks, and hopefully, if I can find some time in my schedule, I plan on taking on the challange of making the entire UI in about a week.
 
 ---
 
 ## One Thing I'm Still Confused About
-The way Kotlin handles Error handling is someting I'm still working on, with having generics and then using the `when` keyword
-as a semi-switch statement when something happens, as an 'event' of some kind. Its kinda hard breaking old habbits as in Go, I'm used to having
-every function return an error like this `data, err := CreateAccount(userData)`. Another thing I wished you covered a bit was the build.grade.kts, in which we had to update local.properties, although after a bit of trial and error, I think I had grasped it.
+One thing that really confuses me about Kotlin and mainly Android studio is their state machine. I came from React,
+so having states is pretty easy where you can define `const [password, setPassword] = useState("")` and the password is read-only,
+which is just super easy to me, most likely because I already knew that, but in Kotlin, it just seems a ton of work defining a new class,
+creating the state, and have it update in its own contained bubble, and yeah it keeps the code clean, but on the other hand its another layer of abstraction.
 
 ---
 
 ## Anything Else *(optional)*
-One thing I notied in your API is that 'isFollowing' seems to be expected to return but when I actually used the API is was not there and caused my JSON serializer to crash as it expected it, Normalally, in a language like Go I could say `omitempty` if its not there which would then just drop it instead of searching for it, but I'm not sure if theres an equivalent in Kotlin - Just wanted to let you know just incase this is not intended.
+This week I took some time to make sure my code was sync'd up with your code, after I did my changes, I noticed that a ton of my stuff was not the same as yours, and my pod-mates usually followed your direction and design, while I took the time to try and figure things out on my own, but becuase I tried it on my own, at the end of it, my code becomes more deviated, like me using a single auth model over twin, or having unique errors, and its nice because these are the things I like to add, but it also is not great because when I'm stuck, like this week, I have nothing to fall back on. In the future, I plan on still writing it my own, but trying to see first how you implemented things. 
 
 ---
 
