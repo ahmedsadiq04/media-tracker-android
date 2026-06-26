@@ -54,6 +54,12 @@
     <string name="action_follow">Follow</string>
     <string name="action_following">Following</string>
 
+    <!-- Search -->
+    <string name="search_title">Search</string>
+    <string name="search_hint">Search books, movies, shows…</string>
+    <string name="search_popular_this_week">Popular This Week</string>
+    <string name="search_results_count">%1$d results</string>
+
     <!-- Connections -->
     <string name="connections_title">Connections</string>
     <string name="connections_followers_empty">No one follows you yet.</string>
