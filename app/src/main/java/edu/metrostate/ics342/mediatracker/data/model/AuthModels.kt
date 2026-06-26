@@ -35,3 +35,10 @@ data class CreateUserResponse(
     var isFollowing: Boolean?,
     var createdAt: String, //can be string due to it using ISO 8601
 )
+
+@Serializable
+data class TokenRefreshResponse(
+    val accessToken: String,
+    val refreshToken: String,
+    val user: CreateUserResponse?,
+)
