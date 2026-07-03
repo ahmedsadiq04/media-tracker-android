@@ -14,10 +14,16 @@ data class Media(
     val creator: String? = null,      // shows
     val network: String? = null,      // shows (streaming / broadcast platform)
     val coverUrl: String? = null,
+    var description: String? = null,
     val publishedYear: Int? = null,
     val averageRating: Float = 0f,
-    val ratingCount: Int = 0,
-    val genres: List<String> = emptyList()
+    val ratingCount: Long = 0,
+    val genres: List<String> = emptyList(),
+
+    var pageCount: Int? = null,
+    var runtimeMinutes: Int? = null,
+    var seasonCount: Int? = null,
+    var episodeCount: Int? = null,
 )
 
 /** Returns a human-readable credit line appropriate for the media type. */
