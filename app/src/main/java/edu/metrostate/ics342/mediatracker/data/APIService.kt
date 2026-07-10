@@ -6,7 +6,9 @@ import edu.metrostate.ics342.mediatracker.data.model.TokenRefreshResponse
 import edu.metrostate.ics342.mediatracker.data.model.TokenRequest
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 sealed interface APIResult<out T> {
     data class Success<out T>(val data: T) : APIResult<T>

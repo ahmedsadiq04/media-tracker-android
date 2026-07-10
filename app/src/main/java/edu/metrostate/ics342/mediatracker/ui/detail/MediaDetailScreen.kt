@@ -5,6 +5,8 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -15,27 +17,37 @@ import androidx.compose.runtime.Composable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import edu.metrostate.ics342.mediatracker.data.model.Media
+import edu.metrostate.ics342.mediatracker.data.model.Review
 import edu.metrostate.ics342.mediatracker.data.model.creatorCredit
+import edu.metrostate.ics342.mediatracker.ui.auth.AuthViewModel
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.Locale
 import kotlin.math.log10
 import kotlin.math.pow
 import kotlin.math.roundToInt
+import edu.metrostate.ics342.mediatracker.R as Rstr
 
 //Turns Number to valid string
 fun Long.toReadableString(): String {
@@ -65,22 +77,17 @@ fun Long.toReadableString(): String {
 fun MediaDetailScreen(
     mediaId: Int,
     onNavigateBack: () -> Unit,
-    onWriteReview: (Int) -> Unit
+    onWriteReview: (Int) -> Unit,
+    viewModel: MediaDetailViewModel = viewModel()
 ) {
-    val scrollState = rememberScrollState()
-    val loadedMedia = Media(
-        id = mediaId,
-        mediaType = "book",
-        title = "Big Sur",
-        author = "Apple Inc.",
-        coverUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzlCFWKA3mxT7PrDdnl1kalityeJ3_H1ZFks7QE7SkiPWDPShMBWLpUc0&s=10",
-        publishedYear = 2020,
-        averageRating = 4.8f,
-        ratingCount = 15500000, //15.5M mac books sold
-        genres = listOf("Technology"),
-        description = "Apple Inc. is an American multinational technology company headquartered in Cupertino, California. Founded in 1976 by Steve Jobs, Steve Wozniak, and Ronald Wayne, it is globally renowned for hardware products like the iPhone, Mac, and iPad, as well as software, cloud services, and the App Store.",
-        pageCount = 750,
-    )
+    //on first load or if mediaID changes, func is called
+    LaunchedEffect(mediaId) {
+        viewModel.setMediaId(mediaId)
+    }
+
+    val loadedMedia by viewModel.mediaDetail.collectAsStateWithLifecycle() //watches like React states
+    val couldNotFind by viewModel.mediaError.collectAsStateWithLifecycle()
+    val reviews by viewModel.reviews.collectAsStateWithLifecycle()
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -111,7 +118,7 @@ fun MediaDetailScreen(
         }
 
         Column(
-            modifier = Modifier.fillMaxSize().verticalScroll(scrollState).weight(1f),
+            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -124,10 +131,21 @@ fun MediaDetailScreen(
                     .clip(RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.Center
             ) {
-                if (loadedMedia.coverUrl != null) {
+                if(couldNotFind) {
+                    Surface(color = MaterialTheme.colorScheme.surfaceVariant,
+                        modifier = Modifier.fillMaxSize()) {
+                            Icon(
+                                imageVector = Icons.Filled.ErrorOutline,
+                                contentDescription = "Error",
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                } else if(loadedMedia == null) {
+                    CircularProgressIndicator()
+                } else if (loadedMedia?.coverUrl != null) {
                     AsyncImage(
-                        model              = loadedMedia.coverUrl,
-                        contentDescription = loadedMedia.title,
+                        model              = loadedMedia?.coverUrl,
+                        contentDescription = loadedMedia?.title,
                         contentScale       = ContentScale.Crop,
                         modifier           = Modifier.fillMaxSize()
                     )
@@ -135,7 +153,7 @@ fun MediaDetailScreen(
                     Surface(color = MaterialTheme.colorScheme.surfaceVariant,
                         modifier = Modifier.fillMaxSize()) {
                         Box(contentAlignment = Alignment.Center) {
-                            Text(when (loadedMedia.mediaType) {
+                            Text(when (loadedMedia?.mediaType) {
                                 "book" -> "📖"; "movie" -> "🎬"; "show" -> "📺"
                                 else -> "?"
                             }, style = MaterialTheme.typography.titleLarge)
@@ -146,197 +164,272 @@ fun MediaDetailScreen(
 
             Spacer(Modifier.height(12.dp))
 
-            Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                //If Errored out
+                if (couldNotFind) {
+                    Text("Media Could Not Be Found", style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.SemiBold, maxLines = 2)
+                }
+
                 //Title
-                Text(loadedMedia.title, style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.SemiBold, maxLines = 2)
+                loadedMedia?.title?.let {
+                    Text(it, style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.SemiBold, maxLines = 2)
+                }
                 Spacer(Modifier.height(2.dp))
 
                 Spacer(Modifier.height(4.dp))
 
                 //Author
-                Text(loadedMedia.creatorCredit(LocalContext.current),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                loadedMedia?.creatorCredit(LocalContext.current)?.let {
+                    Text(it,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
 
                 Spacer(Modifier.height(12.dp))
 
                 //Stars / Rating
-                val numStars = loadedMedia.averageRating.roundToInt()
-                val ratingString = loadedMedia.ratingCount.toReadableString() //turns to k, M, etc...
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                    //Stars
-                    //Rating Float
-                    Text(
-                        text = buildString {
-                            append("★".repeat(numStars))
-                            append(" ${"%.1f".format(loadedMedia.averageRating)}")
-                        },
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
+                if(loadedMedia != null) {
+                    val numStars: Int? = loadedMedia?.averageRating?.roundToInt()
+                    val ratingString =
+                        loadedMedia?.ratingCount?.toReadableString() //turns to k, M, etc...
 
-                    Spacer(Modifier.width(4.dp))
-
-                    Text(
-                        text = "(${ratingString} reviews)",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-
-                Spacer(Modifier.height(24.dp))
-
-                //Row for Want to / Save
-                Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp), horizontalArrangement = Arrangement.Center) {
-                    Button(
-                        modifier = Modifier.background(MaterialTheme.colorScheme.primary),
-                        shape = RoundedCornerShape(12.dp),
-                        onClick = {},
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
                     ) {
-                        Icon(
-                            imageVector = Icons.Filled.Add,
-                            contentDescription = "Add",
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
+                        //Stars
+                        //Rating Float
                         Text(
-                            text = "Want To",
-                            style = MaterialTheme.typography.titleSmall,
-                            color = MaterialTheme.colorScheme.onPrimary,
+                            text = buildString {
+                                numStars?.let { append("★".repeat(it)) }
+                                append(" ${"%.1f".format(loadedMedia?.averageRating)}")
+                            },
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.secondary
+                        )
+
+                        Spacer(Modifier.width(4.dp))
+
+                        Text(
+                            text = "(${ratingString} reviews)",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
                     }
 
-                    Spacer(modifier = Modifier.width(36.dp))
+                    Spacer(Modifier.height(24.dp))
 
-                    Button(
-                        modifier = Modifier.background(MaterialTheme.colorScheme.primary),
-                        shape = RoundedCornerShape(12.dp),
-                        onClick = {},
+                    //Row for Want to / Save
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        Icon(
-                            imageVector = Icons.Filled.Favorite,
-                            contentDescription = "Save",
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
-                        Text(
-                            text = "Save",
-                            style = MaterialTheme.typography.titleSmall,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
+                        Button(
+                            onClick = { /* TODO: add to library */ },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(stringResource(Rstr.string.status_want_to))
+                        }
+                        OutlinedButton(
+                            onClick = { /* TODO: save */ },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Icon(
+                                Icons.Outlined.FavoriteBorder,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(Modifier.width(6.dp))
+                            Text(stringResource(Rstr.string.status_save))
+                        }
                     }
-                }
 
-                Spacer(Modifier.height(24.dp))
+                    Spacer(Modifier.height(24.dp))
 
-                //About Section
-                Text(
-                    text = "About",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
-                )
-                loadedMedia.description?.let {
-                    Spacer(Modifier.height(2.dp))
+                    //About Section
                     Text(
-                        text = it,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
-                }
-
-                Spacer(Modifier.height(24.dp))
-
-                //Year, Pages, and Genre Section
-                Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
-                    SkeletonBox("Year", loadedMedia.publishedYear.toString())
-
-                    if (loadedMedia.mediaType == "book") {
-                        SkeletonBox(title = "Pages", body = loadedMedia.pageCount.toString())
-                    } else if (loadedMedia.mediaType == "movie") {
-                        SkeletonBox(title = "Runtime", body = loadedMedia.runtimeMinutes.toString())
-                    } else {
-                        SkeletonBox(title = "Seasons", body = loadedMedia.seasonCount.toString())
-                        SkeletonBox(title = "Episodes", body = loadedMedia.episodeCount.toString())
-                    }
-                }
-
-                Spacer(Modifier.height(24.dp))
-
-                //Reviews Section
-                Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.Center) {
-                    Text(
-                        text = "Reviews (${ratingString})",
+                        text = "About",
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
                     )
-
-                    Spacer(modifier = Modifier.weight(1f))
-
-                    Button(
-                        shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.Transparent,
-                            contentColor = MaterialTheme.colorScheme.primary
-                        ),
-                        onClick = {},
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Add,
-                            contentDescription = "Add",
-                            tint = MaterialTheme.colorScheme.primary
-                        )
+                    loadedMedia?.description?.let {
+                        Spacer(Modifier.height(2.dp))
                         Text(
-                            text = "Write Review",
-                            style = MaterialTheme.typography.titleSmall,
-                            color = MaterialTheme.colorScheme.primary,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
+                            text = it,
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(horizontal = 16.dp)
                         )
                     }
-                }
 
-                //TODO: Field for the Reviews, Use Lazy load?
+                    Spacer(Modifier.height(24.dp))
+
+                    //Year, Pages, and Genre Section
+                    if(loadedMedia != null) StatGrid(loadedMedia!!)
+
+                    Spacer(Modifier.height(24.dp))
+
+                    //Reviews Section
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "Reviews (${ratingString})",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                        )
+
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        Button(
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.Transparent,
+                                contentColor = MaterialTheme.colorScheme.primary
+                            ),
+                            onClick = { onWriteReview(loadedMedia?.id ?: -1) },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Add,
+                                contentDescription = "Add",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Text(
+                                text = "Write Review",
+                                style = MaterialTheme.typography.titleSmall,
+                                color = MaterialTheme.colorScheme.primary,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    }
+
+                    ReviewList(reviews, viewModel, mediaId)
+                }
             }
         }
     }
 }
 
 @Composable
-fun SkeletonBox(
-    title: String,
-    body: String,
-) {
-    Box(
-        modifier = Modifier
-            .width(125.dp).height(65.dp).padding(8.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.surface)
+private fun StatGrid(detail: Media) {
+    val stats = buildList {
+        detail.publishedYear?.let { add(stringResource(Rstr.string.detail_stat_year) to it.toString()) }
+        when (detail.mediaType) {
+            "book" -> detail.pageCount?.let {
+                add(stringResource(Rstr.string.detail_stat_pages) to it.toString())
+            }
+            "movie" -> detail.runtimeMinutes?.let {
+                add(stringResource(Rstr.string.detail_stat_runtime) to stringResource(Rstr.string.detail_runtime_minutes, it))
+            }
+            "show" -> detail.seasonCount?.let {
+                add(stringResource(Rstr.string.detail_stat_seasons) to it.toString())
+            }
+        }
+        detail.genres.firstOrNull()?.let {
+            add(stringResource(Rstr.string.detail_stat_genre) to it)
+        }
+    }
+
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        stats.forEach { (label, value) ->
+            StatBox(label = label, value = value, modifier = Modifier.weight(1f))
+        }
+    }
+}
+
+@Composable
+private fun StatBox(label: String, value: String, modifier: Modifier = Modifier) {
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(12.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.padding(vertical = 12.dp, horizontal = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium
+                text = label.uppercase(),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-
-            Spacer(modifier = Modifier.weight(1f))
-
+            Spacer(Modifier.height(4.dp))
             Text(
-                text = body,
-                style = MaterialTheme.typography.bodyMedium
+                text = value,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1
             )
         }
+    }
+}
+
+@Composable
+fun ReviewList(reviews: List<Review>, viewModel: MediaDetailViewModel, mediaId: Int) {
+    if (reviews.isEmpty()) {
+        Text(
+            text = "No reviews",
+            modifier = Modifier.padding(16.dp),
+            style = MaterialTheme.typography.bodyMedium
+        )
+    } else {
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth().heightIn(max = 400.dp),
+            contentPadding = PaddingValues(bottom = 16.dp)
+        ) {
+            items(reviews) { review ->
+                ReviewItem(review)
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+            }
+
+            item{ //hopefully loads next chunk
+                LaunchedEffect(Unit) {
+                    val lastReview = reviews.lastOrNull()
+                    if (lastReview != null) {
+                        viewModel.loadReviews(mediaId, after = lastReview.createdAt)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ReviewItem(review: Review) {
+    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            // Placeholder for User Avatar if you have one
+            Text(
+                text = review.user?.username ?: "Anonymous",
+                style = MaterialTheme.typography.titleSmall
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "★".repeat(review.rating),
+                color = MaterialTheme.colorScheme.secondary
+            )
+        }
+        review.reviewText?.let {
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(text = it, style = MaterialTheme.typography.bodyMedium)
+        }
+        Text(
+            text = review.createdAt,
+            style = MaterialTheme.typography.labelSmall,
+            color = Color.Gray
+        )
     }
 }
