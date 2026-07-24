@@ -1,6 +1,7 @@
 package edu.metrostate.ics342.mediatracker.ui.detail
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
@@ -66,6 +67,29 @@ class MediaDetailViewModel(application: Application) : AndroidViewModel(applicat
         viewModelScope.launch {
             val newReviews = mediaRepository.reviews(mediaId, limit, after)
             _reviews.value += newReviews
+        }
+    }
+
+    //TODO: notification of some kind for this instead of logs
+    fun wantTo(mediaId: Int) {
+        viewModelScope.launch {
+            val response = mediaRepository.WantTo(mediaId)
+            if(response.isSuccessful) {
+                Log.i("MediaDetailViewModel", "Saved Media as 'want to'")
+            } else {
+                Log.e("MediaDetailViewModel", "Error when saving media as 'want to', ${response.errorBody()?.toString()}")
+            }
+        }
+    }
+
+    fun favorite(mediaId: Int) {
+        viewModelScope.launch {
+            val response = mediaRepository.Favorite(mediaId)
+            if(response.isSuccessful) {
+                Log.i("MediaDetailViewModel", "Saved Media as 'favorite'")
+            } else {
+                Log.e("MediaDetailViewModel", "Error when saving media as 'favorite', ${response.errorBody()?.toString()}")
+            }
         }
     }
 }

@@ -83,6 +83,7 @@ fun MediaDetailScreen(
     //on first load or if mediaID changes, func is called
     LaunchedEffect(mediaId) {
         viewModel.setMediaId(mediaId)
+        viewModel.loadReviews(mediaId)
     }
 
     val loadedMedia by viewModel.mediaDetail.collectAsStateWithLifecycle() //watches like React states
@@ -229,13 +230,13 @@ fun MediaDetailScreen(
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         Button(
-                            onClick = { /* TODO: add to library */ },
+                            onClick = { viewModel.wantTo(mediaId) },
                             modifier = Modifier.weight(1f)
                         ) {
                             Text(stringResource(Rstr.string.status_want_to))
                         }
                         OutlinedButton(
-                            onClick = { /* TODO: save */ },
+                            onClick = { viewModel.favorite(mediaId) },
                             modifier = Modifier.weight(1f)
                         ) {
                             Icon(
