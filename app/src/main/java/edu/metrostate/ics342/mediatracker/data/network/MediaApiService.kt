@@ -1,21 +1,15 @@
 package edu.metrostate.ics342.mediatracker.data.network
 
-import edu.metrostate.ics342.mediatracker.data.model.FavoriteItem
-import edu.metrostate.ics342.mediatracker.data.model.FavoriteRequest
-import edu.metrostate.ics342.mediatracker.data.model.LibraryItem
-import edu.metrostate.ics342.mediatracker.data.model.LibraryRequest
 import edu.metrostate.ics342.mediatracker.data.model.Media
 import edu.metrostate.ics342.mediatracker.data.model.Review
 import retrofit2.Response
-import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MediaApiService {
 
-    //allows the search of media
+    //alows the search of media
     @GET("media")
     suspend fun searchMedia(
         @Query("query") query: String? = null,
@@ -35,11 +29,4 @@ interface MediaApiService {
         @Query("limit") limit: Int = 20,
         @Query("after") after: String? = null
     ) : Response<List<Review>>
-
-
-    @POST("library")
-    suspend fun addToLibrary(@Body body: LibraryRequest) : Response<LibraryItem>
-
-    @POST("favorites")
-    suspend fun addToFavorite(@Body body: FavoriteRequest) : Response<FavoriteItem>
 }
