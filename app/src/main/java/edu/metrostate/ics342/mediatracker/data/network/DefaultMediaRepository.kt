@@ -3,11 +3,13 @@ package edu.metrostate.ics342.mediatracker.data.network
 import edu.metrostate.ics342.mediatracker.R
 import edu.metrostate.ics342.mediatracker.data.APIResult
 import edu.metrostate.ics342.mediatracker.data.SessionRepository
+import edu.metrostate.ics342.mediatracker.data.model.AddQuote
 import edu.metrostate.ics342.mediatracker.data.model.FavoriteItem
 import edu.metrostate.ics342.mediatracker.data.model.FavoriteRequest
 import edu.metrostate.ics342.mediatracker.data.model.LibraryItem
 import edu.metrostate.ics342.mediatracker.data.model.LibraryRequest
 import edu.metrostate.ics342.mediatracker.data.model.Media
+import edu.metrostate.ics342.mediatracker.data.model.Quote
 import edu.metrostate.ics342.mediatracker.data.model.Review
 import retrofit2.Response
 
@@ -59,5 +61,16 @@ class DefaultMediaRepository(sessionRepository: SessionRepository) {
 
     suspend fun Favorite(MediaID: Int): Response<FavoriteItem> {
         return api.addToFavorite(FavoriteRequest(mediaId = MediaID))
+    }
+
+    suspend fun CreateQuote(MediaID: Int, Text: String, pageNumber: Int?, Public: Boolean): Response<Quote> {
+        return api.CreateQuote(
+            AddQuote(
+                mediaId = MediaID,
+                quoteText = Text,
+                pageNumber = pageNumber,
+                isPublic = Public
+            )
+        )
     }
 }

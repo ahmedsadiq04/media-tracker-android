@@ -93,6 +93,9 @@
     <string name="feed_user_someone">Someone</string>
     <string name="feed_media_something">something</string>
 
+    <!-- Quotes -->
+    <string name="quotes_add">Add Quote</string>
+
     <!-- Errors -->
     <string name="error_empty_credentials">Please enter your email and password.</string>
     <string name="error_empty_fields">Please fill in all fields.</string>
