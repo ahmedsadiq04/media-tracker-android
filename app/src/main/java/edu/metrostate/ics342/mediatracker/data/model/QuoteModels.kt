@@ -16,7 +16,7 @@ data class Quote (
     val userId: String,
     val mediaId: Int,
     val quoteText: String,
-    val pageNumber: Int,
+    val pageNumber: Int?,
     val isPublic: Boolean,
     val likeCount: Int,
     val createdAt: String,

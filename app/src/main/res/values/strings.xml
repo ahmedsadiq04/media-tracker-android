@@ -19,6 +19,7 @@
     <string name="nav_feed">Feed</string>
     <string name="nav_search">Search</string>
     <string name="nav_library">Library</string>
+    <string name="nav_quotes">Quotes</string>
     <string name="nav_people">People</string>
     <string name="nav_profile">Profile</string>
 

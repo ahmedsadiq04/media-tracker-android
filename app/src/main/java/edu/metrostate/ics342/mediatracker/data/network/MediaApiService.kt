@@ -47,4 +47,11 @@ interface MediaApiService {
 
     @POST("quotes")
     suspend fun CreateQuote(@Body body: AddQuote): Response<Quote>
+
+    @GET("quotes")
+    suspend fun GetQuotes(
+        @Query("public") public: Boolean = false,
+        @Query("limit") limit: Int = 20,
+        @Query("after") after: String? = null
+    ): Response<List<Quote>>
 }

@@ -73,4 +73,12 @@ class DefaultMediaRepository(sessionRepository: SessionRepository) {
             )
         )
     }
+
+    suspend fun GetMyQuote(): Response<List<Quote>> {
+        return api.GetQuotes(
+            false,
+            50,
+            null
+        )
+    }
 }

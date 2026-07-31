@@ -12,6 +12,7 @@ import androidx.compose.material3.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
@@ -53,12 +54,23 @@ fun QuoteModal(
                 // Quote Text Input
                 OutlinedTextField(
                     value = quoteText,
-                    onValueChange = { quoteText = it },
+                    onValueChange = { newText ->
+                        if (newText.length <= 500) { //bad to hard code value
+                            quoteText = newText
+                        }
+                    },
                     label = { Text("Quote Text") },
                     placeholder = { Text("Enter the quote...") },
                     modifier = Modifier.fillMaxWidth(),
                     minLines = 3,
-                    maxLines = 5
+                    maxLines = 5,
+                    supportingText = {
+                        Text(
+                            text = "${quoteText.length} / $500",
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.End
+                        )
+                    }
                 )
 
                 // Optional Page Number Input

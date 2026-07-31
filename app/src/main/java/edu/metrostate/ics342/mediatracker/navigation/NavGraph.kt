@@ -21,6 +21,7 @@ import edu.metrostate.ics342.mediatracker.ui.library.LibraryScreen
 import edu.metrostate.ics342.mediatracker.ui.profile.EditProfileScreen
 import edu.metrostate.ics342.mediatracker.ui.profile.MyProfileScreen
 import edu.metrostate.ics342.mediatracker.ui.profile.UserProfileScreen
+import edu.metrostate.ics342.mediatracker.ui.quotes.QuoteScreen
 import edu.metrostate.ics342.mediatracker.ui.review.WriteReviewScreen
 import edu.metrostate.ics342.mediatracker.ui.search.SearchResultsScreen
 import edu.metrostate.ics342.mediatracker.ui.search.SearchScreen
@@ -31,6 +32,7 @@ private val bottomNavRoutes = setOf(
     Routes.SEARCH,
     Routes.SEARCH_RESULTS,
     Routes.LIBRARY,
+    Routes.QUOTES,
     Routes.CONNECTIONS,
     Routes.MY_PROFILE,
 )
@@ -116,6 +118,13 @@ fun MediaTrackerNavGraph(navController: NavHostController) {
             composable(Routes.LIBRARY) {
                 LibraryScreen(
                     onMediaClick = { mediaId -> navController.navigate("media_detail/$mediaId") }
+                )
+            }
+
+            //Quote Screen - Shows Public and Private Quotes
+            composable(Routes.QUOTES) {
+                QuoteScreen(
+
                 )
             }
 
