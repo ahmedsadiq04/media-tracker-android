@@ -1,6 +1,7 @@
 package edu.metrostate.ics342.mediatracker.ui.detail
 
 import android.R
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -25,6 +26,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
@@ -80,9 +84,14 @@ fun MediaDetailScreen(
     onWriteReview: (Int) -> Unit,
     viewModel: MediaDetailViewModel = viewModel()
 ) {
+    //Displays the quote modal window
+    var showQuoteModal by remember { mutableStateOf(false) }
+
     //on first load or if mediaID changes, func is called
     LaunchedEffect(mediaId) {
         viewModel.setMediaId(mediaId)
+        viewModel.loadReviews(mediaId)
+
     }
 
     val loadedMedia by viewModel.mediaDetail.collectAsStateWithLifecycle() //watches like React states
@@ -92,6 +101,15 @@ fun MediaDetailScreen(
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
+        QuoteModal(
+            showDialog = showQuoteModal,
+            onDismiss = { showQuoteModal = false },
+            onSave = { quoteData ->
+                //save to viewmodel
+                viewModel.CreateQuote(mediaId, quoteData.quoteText, quoteData.pageNumber, quoteData.isPublic)
+            }
+        )
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -223,7 +241,7 @@ fun MediaDetailScreen(
 
                     Spacer(Modifier.height(24.dp))
 
-                    //Row for Want to / Save
+                    //Row for Want to / Save / Add Quote
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
@@ -245,6 +263,14 @@ fun MediaDetailScreen(
                             )
                             Spacer(Modifier.width(6.dp))
                             Text(stringResource(Rstr.string.status_save))
+                        }
+                        Button(
+                            onClick = {
+                                showQuoteModal = true
+                            },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(stringResource(Rstr.string.quotes_add))
                         }
                     }
 
