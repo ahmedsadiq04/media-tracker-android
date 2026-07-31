@@ -9,15 +9,13 @@ import edu.metrostate.ics342.mediatracker.data.model.Media
 import edu.metrostate.ics342.mediatracker.data.model.Quote
 import edu.metrostate.ics342.mediatracker.data.model.Review
 import retrofit2.Response
-import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MediaApiService {
 
-    //allows the search of media
+    //alows the search of media
     @GET("media")
     suspend fun searchMedia(
         @Query("query") query: String? = null,

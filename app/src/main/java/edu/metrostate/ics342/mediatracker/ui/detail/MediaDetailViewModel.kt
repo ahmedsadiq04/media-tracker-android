@@ -1,7 +1,6 @@
 package edu.metrostate.ics342.mediatracker.ui.detail
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch

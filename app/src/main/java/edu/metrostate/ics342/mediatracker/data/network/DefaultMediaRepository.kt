@@ -36,7 +36,8 @@ class DefaultMediaRepository(sessionRepository: SessionRepository) {
     }
 
     suspend fun media(mediaID: Int): Response<Media> {
-        return api.getMedia(mediaID)
+        val response = api.getMedia(mediaID)
+        return response
     }
 
     suspend fun reviews(MediaID: Int, limit: Int, after: String? = null): List<Review> {
