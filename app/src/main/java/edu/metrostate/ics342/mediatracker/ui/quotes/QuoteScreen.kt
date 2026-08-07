@@ -32,7 +32,13 @@ import edu.metrostate.ics342.mediatracker.data.model.LibraryStatus
 import edu.metrostate.ics342.mediatracker.data.model.Quote
 import edu.metrostate.ics342.mediatracker.data.model.creatorCredit
 import edu.metrostate.ics342.mediatracker.ui.detail.MediaDetailViewModel
+import edu.metrostate.ics342.mediatracker.ui.detail.QuoteModal
 import edu.metrostate.ics342.mediatracker.ui.library.LibraryViewModel
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
+
+//TODO: Add Load Next Section when Scroll to Bottom
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,6 +46,32 @@ fun QuoteScreen(
     viewModel: QuotesViewModel = viewModel()
 ) {
     val quotes by viewModel.quotes.collectAsStateWithLifecycle()
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
+    val tabs = listOf("My Quotes", "Public Quotes")
+
+    var showQuoteModal by remember { mutableStateOf(false) }
+    var selectedQuoteEdit by remember { mutableStateOf<Quote?>(null) }
+
+    // Helper to open modal for creation
+    fun openCreateModal() {
+        selectedQuoteEdit = null
+        showQuoteModal = true
+    }
+
+    // Helper to open modal for editing
+    fun openEditModal(quote: Quote) {
+        selectedQuoteEdit = quote
+        showQuoteModal = true
+    }
+
+    // Function called when a tab is clicked
+    fun onQuoteFilterChanged(index: Int) {
+        selectedTabIndex = index
+        when (index) {
+            0 -> viewModel.getMyQuotes()
+            1 -> viewModel.getPublicQuotes()
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.getMyQuotes()
@@ -48,20 +80,59 @@ fun QuoteScreen(
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(title = { Text(stringResource(edu.metrostate.ics342.mediatracker.R.string.nav_quotes)) })
 
-        //Section for [My Quotes | Public Quotes]
-        //Section for Search Bar / Filter Bar
+        //Only when quote is being edited
+        QuoteModal(
+            showDialog = showQuoteModal,
+            onDismiss = { showQuoteModal = false },
+            onSave = { quoteData ->
+                //save to viewmodel
+                //viewModel.CreateQuote(mediaId, quoteData.quoteText, quoteData.pageNumber, quoteData.isPublic)
+            }
+        )
 
-        //Scrollview for Quotes
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+        TabRow(
+            selectedTabIndex = selectedTabIndex,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
-            items(
-                items = quotes,
-                key = { quote -> quote.id}
-            ) { quote ->
-                QuoteCard(quote = quote)
+            tabs.forEachIndexed { index, title ->
+                Tab(
+                    selected = selectedTabIndex == index,
+                    onClick = { onQuoteFilterChanged(index) },
+                    text = { Text(text = title) }
+                )
+            }
+        }
+
+        //Loading Circle if Quotes is Empty
+        if (quotes.isEmpty()) {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+            return@Column
+        } else {
+            //Scrollview for Quotes
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(
+                    items = quotes,
+                    key = { quote -> quote.id }
+                ) { quote ->
+                    val isMyQuote = selectedTabIndex == 0;
+
+                    QuoteCard(
+                        quote = quote,
+                        onClick = {
+                            if (isMyQuote) {
+                                openEditModal(quote)
+                            }
+                        }
+                    )
+                }
             }
         }
     }
@@ -71,9 +142,10 @@ fun QuoteScreen(
 fun QuoteCard(
     quote: Quote,
     onLikeClick: () -> Unit = {},
+    onClick: () -> Unit = {},
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
@@ -166,11 +238,22 @@ fun QuoteCard(
                     )
                 }
                 Text(
-                    text = quote.createdAt,
+                    text = formatQuoteDate(quote.createdAt),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.outline
                 )
             }
         }
+    }
+}
+
+//Helper func to turn it from isoString to local time
+fun formatQuoteDate(isoString: String): String {
+    return try {
+        val parsed = OffsetDateTime.parse(isoString)
+        val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a", Locale.getDefault())
+        parsed.format(formatter)
+    } catch (e: Exception) {
+        isoString //fails to convert, return the value given
     }
 }

@@ -15,7 +15,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-
+import androidx.compose.runtime.*
 
 data class QuoteData(
     val quoteText: String,
@@ -27,13 +27,27 @@ data class QuoteData(
 fun QuoteModal(
     showDialog: Boolean,
     onDismiss: () -> Unit,
-    onSave: (QuoteData) -> Unit
+    onSave: (QuoteData) -> Unit,
+
+    //Default data
+    initialQuoteText: String = "",
+    initialPageNumber: Int? = null,
+    initialIsPublic: Boolean = false,
 ) {
     if (!showDialog) return
 
-    var quoteText by remember { mutableStateOf("") }
-    var pageNumberText by remember { mutableStateOf("") }
-    var isPublic by remember { mutableStateOf(false) }
+    val isEditing = initialQuoteText.isNotBlank() || initialPageNumber != null
+
+    var quoteText by remember { mutableStateOf(initialQuoteText) }
+    var pageNumberText by remember { mutableStateOf(initialPageNumber?.toString() ?: "") }
+    var isPublic by remember { mutableStateOf(initialIsPublic) }
+
+    LaunchedEffect(showDialog, initialQuoteText, initialPageNumber, initialIsPublic) {
+        quoteText = initialQuoteText
+        pageNumberText = initialPageNumber?.toString() ?: ""
+        isPublic = initialIsPublic
+    }
+
     Dialog(onDismissRequest = onDismiss) {
         Surface(
             shape = RoundedCornerShape(16.dp),
