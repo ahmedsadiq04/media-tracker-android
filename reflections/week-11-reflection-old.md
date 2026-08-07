@@ -1,22 +1,28 @@
-# Week 11 Reflection — Bonus Feature Sprint (Week 1 of 2)
+# Week 11 Reflection
 
-*This week's reflection is different from the standard template. We're not doing Profile this week — instead, this is the first of two weeks building your assigned bonus feature (Write Review, Quotes, or Priorities). See `reflection-instructions.md` for naming/submission rules, which are unchanged; only the content below differs.*
+> This is an outdated version of this file, and should look at the [new reflection](./week-11-reflection.md)
 
 **Name:** Sadiq Ahmed
-**Date:** 7/30/2026 (fixed due to using outdated template)
-**My assigned bonus feature:** *Quotes*
+
+**Date:** 7/30/2026
 
 ---
 
 ## Commits This Week
 
-<!-- Paste a link to your commits for this week. -->
+<!-- Paste a link to your commits for this week. The easiest way: go to your repo on GitHub,
+     click "commits", and copy the URL after filtering by your name or branch. -->
 
 **Link:** [Branch](https://github.com/ahmedsadiq04/media-tracker-android/tree/week-11) [Pull-Request](https://github.com/ahmedsadiq04/media-tracker-android/pull/12)
 
 ---
 
 ## Code Review
+
+<!-- Every week you leave a review on a pod mate's pull request. Fill in both parts below.
+     Part 1 is the link — I will verify the review exists on GitHub.
+     Part 2 is your written assessment — what you actually looked at and what you found. -->
+
 **Reviewed:** Nicholas
 **Link to my review:** https://github.com/NChyrklund/media-tracker-android/pull/11
 **My Comment** https://github.com/NChyrklund/media-tracker-android/pull/11#pullrequestreview-4824954908
@@ -49,29 +55,6 @@ Just to note, this will need to be hooked by NavGraph.kt if it's placed in there
 ``` markdown
 Left some comments about something that caught my eye, Just some small items that could change in the future depending on the way you continue working on the Reviews
 ```
-
----
-
-## Bonus Feature Progress
-
-<!-- This is the most important section this week. Be concrete: which endpoint(s) did you wire?
-     What's actually showing on screen with real data? What's still stubbed or fake?
-     "I worked on my bonus feature" is not an answer. "I got POST /quotes working from Media Detail
-     and quotes show up in a list on my profile, but I haven't wired edit or delete yet" is. -->
-
-**What's working:**
-I got the UI to work with a new modal window to allow you to create a quote, and it shows up in my custom nav portion for it.
-
-On the media detail page, theres a button to add a quote and you can press it to open a modal window which allows you to create the quote, the page number (optional), and it automatically posts it (you can pick if its public or private)
-
-
-**What's still stubbed, fake, or not started:**
-I still need to create the filter part for the Quotes screen,
-right now it only shows the single user's (self)'s posts,
-
-I also need to allow the user to edit their quotes.
-
-**What I'm blocked on, if anything:**
 
 ---
 
@@ -109,8 +92,8 @@ I just feel right now, unless you have specific needs, cross-platform developmen
 
 | Section | Points | Full Credit | Half Credit | No Credit |
 |:---|:---:|:---|:---|:---|
-| **Reflection** | 10 | Concrete progress report (what's wired, what's not) plus specific, honest "Understood More Deeply" and "Still Confused" sections. | Present but vague — "I worked on my feature" with no specifics on what's actually working. | Missing or one-word answers. |
+| **Reflection** | 10 | Specific, honest responses to "More Deeply" and "Still Confused" sections. Shows genuine thinking — not just "I learned X." | Responses are present but vague or generic ("I got better at Compose"). | Missing or one-word answers. |
 | **Code Review** | 10 | Specific observation about the code with explanation of why it matters (or a substantive positive comment). Link to review present and verified. | A question or comment that shows you read the code, but lacks explanation. | "Looks good!" or equivalent. Missing link. Review not found on GitHub. |
 | **Total** | **20** | | | |
 
-**A note on the code review score:** I check that the review actually exists on GitHub before grading. The written summary here and the GitHub comment should match.
+**A note on the code review score:** I check that the review actually exists on GitHub before grading. The written summary here and the GitHub comment should match. If the review isn't there, the written summary can't earn credit.
