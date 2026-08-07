@@ -22,13 +22,27 @@ class QuotesViewModel(application: Application) : AndroidViewModel(application) 
     val quotes: StateFlow<List<Quote>> = _quotes.asStateFlow()
 
     fun getMyQuotes() {
+        _quotes.value = emptyList<Quote>();
         viewModelScope.launch {
-            val response = mediaRepository.GetMyQuote()
+            val response = mediaRepository.GetMyQuotes()
 
             if (response.isSuccessful) {
                 _quotes.value = response.body() ?: emptyList()
             } else {
                 Log.e("Quote", "Failed to get self-user's quotes: ${response.code()}")
+            }
+        }
+    }
+
+    fun getPublicQuotes() {
+        _quotes.value = emptyList<Quote>();
+        viewModelScope.launch {
+            val response = mediaRepository.GetPublicQuotes()
+
+            if (response.isSuccessful) {
+                _quotes.value = response.body() ?: emptyList()
+            } else {
+                Log.e("Quote", "Failed to get public quotes: ${response.code()}")
             }
         }
     }
